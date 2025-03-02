@@ -1,16 +1,14 @@
-# spotify_playlist_creator
+# Spotify Playlist Creator
 
-## Client
+### > Run Client
 
-Inicialização:
 ```
 npm install
 npm run dev
 ```
 
-## Server
+### > Run Server
 
-Inicialização:
 ```
 python -m venv venv
 source venv/bin/activate  # No Linux/macOS
