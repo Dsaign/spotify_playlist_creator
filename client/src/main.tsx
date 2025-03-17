@@ -1,7 +1,19 @@
-const SPOTIFY_URL = "https://accounts.spotify.com";
-const SPOTIFY_API_URL = "https://api.spotify.com";
-const SERVER_HOST = "http://127.0.0.1:8080";
-const _clientId = "a26d55189e484ee8838915cdc33b7ef2";
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.tsx'
+import process from 'process'
+
+
+const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
+const SPOTIFY_URL = process.env.REACT_APP_SPOTIFY_URL;
+const SPOTIFY_API_URL = process.env.REACT_APP_SPOTIFY_API_URL;
+
+createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  )
 
 interface UserProfile {
   display_name: string;
@@ -13,14 +25,15 @@ interface UserProfile {
   external_urls: { spotify: string };
 }
 
-async function getData() {
-  const response = await fetch(`${SERVER_HOST}/api/user_info`);
+export async function getUserData() {
+  const response = await fetch(`${SERVER_HOST}/api/user/get`);
   const data = await response.json();
   console.log(data);
+  return response;
 }
 
-getData();
-checkAuth();
+// await getData();
+// checkAuth();
 
 async function _fetchToken(params: URLSearchParams) {
   return fetch(`${SPOTIFY_URL}/api/token`, {
@@ -38,7 +51,7 @@ export async function checkAuth() {
 
   if (code && !(accessToken && tokenExpiration)) {
     // Code válido, carregando perfil...
-    const accessToken = await getAccessToken(_clientId, code);
+    const accessToken = await getAccessToken(CLIENT_ID, code);
     const profile = await fetchProfile(accessToken);
     populateUI(profile);
   } else if (accessToken && tokenExpiration && Date.now() < parseInt(tokenExpiration)) {
@@ -47,27 +60,27 @@ export async function checkAuth() {
     populateUI(profile);
   } else if (localStorage.getItem("refresh_token")) {
     // Token expirado, tentando renovar...
-    const newToken = await refreshAccessToken(_clientId);
+    const newToken = await refreshAccessToken(CLIENT_ID);
     if (newToken) {
       const profile = await fetchProfile(newToken);
       populateUI(profile);
     } else {
       // Falha ao renovar token, redirecionando para login...
-      redirectToAuthCodeFlow(_clientId);
+      redirectToAuthCodeFlow(CLIENT_ID);
     }
   } else {
     // Sem token válido, redirecionando para login...
-    redirectToAuthCodeFlow(_clientId);
+    redirectToAuthCodeFlow(CLIENT_ID);
   }
 }
 
-async function refreshAccessToken(_clientId: string): Promise<string | null> {
+async function refreshAccessToken(CLIENT_ID: string): Promise<string | null> {
   const refreshToken = localStorage.getItem("refresh_token");
 
   if (!refreshToken) return null;
 
   const params = new URLSearchParams();
-  params.append("client_id", _clientId);
+  params.append("client_id", CLIENT_ID);
   params.append("grant_type", "refresh_token");
   params.append("refresh_token", refreshToken);
 
@@ -91,14 +104,14 @@ async function refreshAccessToken(_clientId: string): Promise<string | null> {
   return responseData.access_token;
 }
 
-export async function redirectToAuthCodeFlow(_clientId: string) {
+export async function redirectToAuthCodeFlow(CLIENT_ID: string) {
   const verifier = generateCodeVerifier(128);
   const challenge = await generateCodeChallenge(verifier);
 
   localStorage.setItem("verifier", verifier);
 
   const params = new URLSearchParams();
-  params.append("client_id", _clientId);
+  params.append("client_id", CLIENT_ID);
   params.append("response_type", "code");
   params.append("redirect_uri", "http://localhost:5173/callback");
   params.append("scope", "user-read-private user-read-email");
@@ -127,14 +140,14 @@ async function generateCodeChallenge(codeVerifier: string) {
     .replace(/=+$/, "");
 }
 
-export async function getAccessToken(_clientId: string, code: string): Promise<string> {
+export async function getAccessToken(CLIENT_ID: string, code: string): Promise<string> {
   const verifier = localStorage.getItem("verifier");
   if (verifier === null) {
     throw new Error("Sem verifier");
   }
 
   const params = new URLSearchParams();
-  params.append("client_id", _clientId);
+  params.append("client_id", CLIENT_ID);
   params.append("grant_type", "authorization_code");
   params.append("code", code);
   params.append("redirect_uri", "http://localhost:5173/callback");
@@ -194,10 +207,10 @@ export function logout() {
   localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
   localStorage.removeItem("token_expiration");
-  redirectToAuthCodeFlow(_clientId);
+  redirectToAuthCodeFlow(CLIENT_ID);
 }
 
 document.getElementById("logout-link")?.addEventListener("click", (event) => {
-  event.preventDefault(); // Evita a navegação padrão do link
+  event.preventDefault();
   logout();
 });

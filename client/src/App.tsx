@@ -1,33 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import ErrorBoundary from './components/error_boundary';
+import { getUserData } from './main'
+
+import { useEffect, useState } from 'react';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [data, setData] = useState<any>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      const result = await getUserData();
+      setData(result);
+      console.log("DATA");
+      console.log(result);
+    }
+    fetchData();
+  }, []);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <section id="profile">
+        <ErrorBoundary>
+          <h1>Minha conta:</h1>
+          <h2>Logado como <span id="displayNames">{data?.display_name}</span></h2>
+          <img id="avatar" src={data?.user_profile_image} alt="Profile Avatar" />
+          <ul>
+            <li>User ID: <span id="id">{data?.user_id}</span></li>
+            <li>E-mail: <span id="email">{data?.user_email}</span></li>
+            <li>Spotify URI: <a id="uri" href={data?.user_uri}>{data?.user_uri}</a></li>
+            <li>Link: <a id="url" href={data?.user_spotify_link}>{data?.user_spotify_link}</a></li>
+          </ul>
+        </ErrorBoundary>
+      </section>
+      <a href="#" id="logout-link">Logout</a>
     </>
   )
 }
