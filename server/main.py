@@ -1,16 +1,27 @@
 from typing import Any, Dict
 from flask import Flask, request, jsonify
 import requests
+import os
 from flask_cors import CORS
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173", "http://127.0.0.1:8080"])
 DEV_MODE = True
 
 
+@app.route("/api/get_client_id")
+def getClientID():
+    return jsonify({"client_id": os.getenv("CLIENT_ID")})
+
+
 @app.route("/api/generate-playlist")
-def home():
+def home() -> Any:
     data = request.json
+    if not data:
+        return ValueError()
     user_prompt = data.get("prompt", "")
     if DEV_MODE:
         # Use local Ollama instance in development
