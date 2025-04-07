@@ -1,13 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
+import './lib/index.css'
 import App from './App.tsx'
 import process from 'process'
 
-
-const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
-const SPOTIFY_URL = process.env.REACT_APP_SPOTIFY_URL;
-const SPOTIFY_API_URL = process.env.REACT_APP_SPOTIFY_API_URL;
+const SERVER_HOST = import.meta.env.VITE_SERVER_HOST;
+const SPOTIFY_URL = import.meta.env.VITE_SPOTIFY_URL;
+const SPOTIFY_API_URL = import.meta.env.VITE_SPOTIFY_API_URL;
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -25,14 +24,6 @@ interface UserProfile {
   external_urls: { spotify: string };
 }
 
-export async function getUserData() {
-  const response = await fetch(`${SERVER_HOST}/api/user/get`);
-  const data = await response.json();
-  console.log(data);
-  return response;
-}
-
-// await getData();
 // checkAuth();
 
 async function _fetchToken(params: URLSearchParams) {
@@ -43,11 +34,32 @@ async function _fetchToken(params: URLSearchParams) {
   });
 }
 
+async function _fetchClientID() {
+  const response = await fetch(`${SERVER_HOST}/api/get_client_id`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Erro ao buscar CLIENT_ID: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data;
+}
+
 export async function checkAuth() {
   const accessToken = localStorage.getItem("access_token");
   const tokenExpiration = localStorage.getItem("token_expiration");
   const params = new URLSearchParams(window.location.search);
   const code = params.get("code");
+
+  const clientData = await _fetchClientID();
+  const CLIENT_ID = clientData?.client_id;
+
+  if (!CLIENT_ID) {
+    throw new Error("CLIENT_ID não definido!");
+  }
 
   if (code && !(accessToken && tokenExpiration)) {
     // Code válido, carregando perfil...

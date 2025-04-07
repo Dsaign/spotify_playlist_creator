@@ -12,9 +12,15 @@ CORS(app, origins=["http://localhost:5173", "http://127.0.0.1:8080"])
 DEV_MODE = True
 
 
-@app.route("/api/get_client_id")
-def getClientID():
-    return jsonify({"client_id": os.getenv("CLIENT_ID")})
+@app.route("/api/get_client_id", methods=["GET"])
+def getClientID() -> Any:
+    """
+    Endpoint to retrieve the CLIENT_ID from environment variables.
+    """
+    client_id = os.getenv("CLIENT_ID")
+    if client_id is None:
+        return jsonify({"error": "CLIENT_ID not found in environment variables"}), 500
+    return jsonify({"client_id": client_id})
 
 
 @app.route("/api/generate-playlist")
@@ -42,13 +48,18 @@ def home() -> Any:
 
 
 @app.route("/api/user/get", methods=["GET"])
-def get_user() -> Dict[str, Any]:
+def get_user_data() -> Dict[str, Any]:
+    """
+    Endpoint to get user data.
+    Returns a dictionary with user information.
+    """
     user_data: Dict[str, Any] = {
         "user_id": 1,
+        "display_name": "Fabio Sampaio",
         "user_email": "teste@teste.com",
         "user_uri": "teste_uri@teste.com",
         "user_spotify_link": "www.link.com.br",
-        "user_profile_image": "[Profile Image]",
+        "user_profile_image": "https://img.myloview.com.br/fotomurais/user-icon-human-person-symbol-avatar-login-sign-700-259624278.jpg",
     }
     return user_data
 
