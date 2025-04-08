@@ -1,5 +1,5 @@
 import './MusicBoardStyle.css';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface MusicBoardProps {
   isMusicPlaying?: boolean;
@@ -9,11 +9,7 @@ function MusicBoard({ isMusicPlaying }: MusicBoardProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationRef = useRef<number | null>(null);
 
-  const [musicToggle, setMusicToggle] = useState(isMusicPlaying);
-
-  useEffect(() => {
-    setMusicToggle(isMusicPlaying);
-
+  useEffect(function runWebGL() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -44,7 +40,7 @@ function MusicBoard({ isMusicPlaying }: MusicBoardProps) {
       return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
     };
 
-    const waveProfile = (distance: number) => {
+    const waveProfile = (distance: number, totalWaveWidth: number) => {
       const normalized = Math.abs(distance) / (totalWaveWidth / 2);
       return normalized >= 1 ? 0 : Math.pow(1 - normalized, 2);
     };
@@ -107,7 +103,7 @@ function MusicBoard({ isMusicPlaying }: MusicBoardProps) {
         const offset = (base.circleRadius * (5 / 3)) / (radius * 1.5);
 
         const distance = index - wavePosition;
-        const waveIntensity = waveProfile(distance);
+        const waveIntensity = waveProfile(distance, totalWaveWidth);
         const lineWidth = 1 + maxLineWidth * waveIntensity * waveIntensity;
 
         const targetOpacity = 0.4;
@@ -164,9 +160,9 @@ function MusicBoard({ isMusicPlaying }: MusicBoardProps) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isMusicPlaying]);
+  }, []);
 
-  return <canvas ref={canvasRef} id="music_board" data-is-music-playing={musicToggle}></canvas>;
+  return <canvas ref={canvasRef} id="music_board" data-is-music-playing={isMusicPlaying}></canvas>;
 }
 
 export default MusicBoard;

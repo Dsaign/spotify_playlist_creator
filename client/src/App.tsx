@@ -1,4 +1,4 @@
-const SERVER_HOST = import.meta.env.VITE_SERVER_HOST
+const SERVER_HOST = import.meta.env.VITE_SERVER_HOST;
 import VolumeSlider from './components/VolumeSlider/VolumeSlider.tsx';
 import MusicBoard from './components/MusicBoard/MusicBoard.tsx';
 import { useState } from 'react';
@@ -26,10 +26,17 @@ function App() {
 
   const [volume, setVolume] = useState(20);
 
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+
+  function toggleMusicPlaying() {
+    setIsMusicPlaying((curr) => !curr);
+  }
+
   return (
     <>
       <VolumeSlider volume={20} onChange={setVolume} />
-      <MusicBoard />
+      <button onClick={toggleMusicPlaying}>Toggle music playing</button>
+      <MusicBoard isMusicPlaying={isMusicPlaying} />
       {/* <section id="profile">
         <h1>Minha conta:</h1>
         <h2>Logado como <span id="displayNames">{data?.display_name || "Carregando..."}</span></h2>
@@ -47,7 +54,7 @@ function App() {
       </section>
       <a href="#" id="logout-link">Logout</a> */}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
