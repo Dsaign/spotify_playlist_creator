@@ -4,7 +4,7 @@ import MusicBoard from './components/MusicBoard/MusicBoard.tsx';
 import { useContext, useState } from 'react';
 import { PlayerContext, PlayerContextProvider } from './context/PlayerContext.tsx';
 
-function App() {
+export default function App() {
   // const [data, setData] = useState<any>(null);
 
   // useEffect(() => {
@@ -25,11 +25,9 @@ function App() {
   //   fetchUserData();
   // }, []);
 
-  const [volume, setVolume] = useState(20);
-
   return (
     <PlayerContextProvider>
-      <VolumeSlider volume={20} onChange={setVolume} />
+      <VolumeSlider />
       <Toggler />
       <MusicBoard />
 
@@ -52,8 +50,6 @@ function App() {
     </PlayerContextProvider>
   );
 }
-
-export default App;
 
 //
 //
