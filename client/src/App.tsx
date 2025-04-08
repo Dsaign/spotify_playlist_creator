@@ -1,7 +1,8 @@
 const SERVER_HOST = import.meta.env.VITE_SERVER_HOST;
 import VolumeSlider from './components/VolumeSlider/VolumeSlider.tsx';
 import MusicBoard from './components/MusicBoard/MusicBoard.tsx';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { PlayerContext, PlayerContextProvider } from './context/PlayerContext.tsx';
 
 function App() {
   // const [data, setData] = useState<any>(null);
@@ -26,17 +27,12 @@ function App() {
 
   const [volume, setVolume] = useState(20);
 
-  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
-
-  function toggleMusicPlaying() {
-    setIsMusicPlaying((curr) => !curr);
-  }
-
   return (
-    <>
+    <PlayerContextProvider>
       <VolumeSlider volume={20} onChange={setVolume} />
-      <button onClick={toggleMusicPlaying}>Toggle music playing</button>
-      <MusicBoard isMusicPlaying={isMusicPlaying} />
+      <Toggler />
+      <MusicBoard />
+
       {/* <section id="profile">
         <h1>Minha conta:</h1>
         <h2>Logado como <span id="displayNames">{data?.display_name || "Carregando..."}</span></h2>
@@ -53,8 +49,18 @@ function App() {
         </ul>
       </section>
       <a href="#" id="logout-link">Logout</a> */}
-    </>
+    </PlayerContextProvider>
   );
 }
 
 export default App;
+
+//
+//
+//
+//
+
+function Toggler() {
+  const { togglePlaying } = useContext(PlayerContext);
+  return <button onClick={togglePlaying}>Toggle music playing</button>;
+}

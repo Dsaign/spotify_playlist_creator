@@ -1,13 +1,16 @@
+import { PlayerContext } from '../../context/PlayerContext';
 import './MusicBoardStyle.css';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 
-interface MusicBoardProps {
-  isMusicPlaying?: boolean;
-}
+// interface MusicBoardProps {
+//   isMusicPlaying?: boolean;
+// }
 
-function MusicBoard({ isMusicPlaying }: MusicBoardProps) {
+function MusicBoard() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationRef = useRef<number | null>(null);
+
+  const { isPlaying, volume } = useContext(PlayerContext);
 
   useEffect(function runWebGL() {
     const canvas = canvasRef.current;
@@ -162,7 +165,14 @@ function MusicBoard({ isMusicPlaying }: MusicBoardProps) {
     };
   }, []);
 
-  return <canvas ref={canvasRef} id="music_board" data-is-music-playing={isMusicPlaying}></canvas>;
+  return (
+    <>
+      <p>
+        Tá playando? {isPlaying ? 'sim' : 'não'} Volume: {volume}
+      </p>
+      <canvas ref={canvasRef} id="music_board" data-is-music-playing={isPlaying} />
+    </>
+  );
 }
 
 export default MusicBoard;
