@@ -1,18 +1,23 @@
-:root{
+@import "tailwindcss";
+
+:root {
   --pure-white: #c6d5e1;
   --less-white: #6a757e;
   --blue-color: 84, 111, 220;
   --size: 85%;
 }
 
-h3{ font-size: 1em }
+h3 {
+  font-size: 1em;
+}
 
-html, body {
+html,
+body {
   height: 100vh;
   background-color: black;
   color: var(--pure-white);
   overflow: hidden;
-  font-family: "Noto Sans", sans-serif;
+  font-family: 'Noto Sans', sans-serif;
   font-size: 1em;
   margin: 0;
   display: flex;
@@ -30,7 +35,7 @@ html, body {
   touch-action: manipulation;
 }
 
-.transition{
+.transition {
   -webkit-transition: all 300ms ease;
   -moz-transition: all 300ms ease;
   -ms-transition: all 300ms ease;
@@ -38,15 +43,15 @@ html, body {
   transition: all 300ms ease;
 }
 
-.hidden{
+.hidden {
   display: none !important;
 }
 
-body:has(#sound-toggle[data-toggled="true"]) #sound-message {
+body:has(#sound-toggle[data-toggled='true']) #sound-message {
   opacity: 0;
 }
 
-#root{
+#root {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -54,7 +59,7 @@ body:has(#sound-toggle[data-toggled="true"]) #sound-message {
   height: 100%;
   width: 95%;
   z-index: 1;
-  margin:0 auto;
+  margin: 0 auto;
   padding: 100px 0 0 0;
   overflow: hidden;
 }
@@ -66,7 +71,7 @@ body:has(#sound-toggle[data-toggled="true"]) #sound-message {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10; 
+  z-index: 10;
 }
 
 #root .logo img {
@@ -81,8 +86,12 @@ body:has(#sound-toggle[data-toggled="true"]) #sound-message {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0 }
-  to   { opacity: 1 }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* SCROLLBAR */
@@ -94,8 +103,8 @@ body:has(#sound-toggle[data-toggled="true"]) #sound-message {
   border-right-width: calc(100vw + 100vh);
   border-color: inherit;
 }
-*::-webkit-scrollbar-thumb{
-  border-color: rgba(var(--blue-color), 0.0);
+*::-webkit-scrollbar-thumb {
+  border-color: rgba(var(--blue-color), 0);
 }
 
 *::-webkit-scrollbar {
@@ -104,15 +113,15 @@ body:has(#sound-toggle[data-toggled="true"]) #sound-message {
 }
 *::-webkit-scrollbar-track {
   border-radius: 5px;
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 *::-webkit-scrollbar-track:hover {
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 *::-webkit-scrollbar-track:active {
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 *::-webkit-scrollbar-thumb {

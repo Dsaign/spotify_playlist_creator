@@ -13,24 +13,22 @@ function VolumeSlider() {
   }
 
   return (
-    <>
-      <div id="sliders_container">
-        <div className="volume">
-          <p>
-            Volume (<span>{volume}</span>):
-          </p>
-          <input
-            id="rg_volume"
-            className="slider"
-            type="range"
-            min="0"
-            max="100"
-            value={volume}
-            onChange={handleChange}
-          />
-        </div>
+    <div id="sliders_container">
+      <div className="w-32 flex-1">
+        <p>
+          Volume (<span>{volume}</span>):
+        </p>
+        <input
+          id="rg_volume"
+          className="slider"
+          type="range"
+          min="0"
+          max="100"
+          value={volume}
+          onChange={handleChange}
+        />
       </div>
-    </>
+    </div>
   );
 }
 

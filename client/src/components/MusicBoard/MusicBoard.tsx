@@ -2,10 +2,6 @@ import { PlayerContext } from '../../context/PlayerContext';
 import './MusicBoardStyle.css';
 import { useContext, useEffect, useRef } from 'react';
 
-// interface MusicBoardProps {
-//   isMusicPlaying?: boolean;
-// }
-
 function MusicBoard() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationRef = useRef<number | null>(null);

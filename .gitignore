@@ -22,6 +22,7 @@ client/*.local
 *.njsproj
 *.sln
 *.sw?
+venv/*
 
 # Python
 server/venv/
