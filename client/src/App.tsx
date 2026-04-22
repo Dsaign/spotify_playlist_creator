@@ -4,6 +4,7 @@ import MusicBoard from './components/MusicBoard/MusicBoard.tsx';
 import { useContext, useState, useEffect } from 'react';
 import { PlayerContext, PlayerContextProvider } from './context/PlayerContext.tsx';
 import { UserMenu, UserMenuProps } from './components/UserMenu/UserMenu.tsx';
+import Logo from './assets/img/logo';
 
 export default function App() {
   const [data, setData] = useState<UserMenuProps['data']>(undefined);
@@ -28,16 +29,15 @@ export default function App() {
 
   return (
     <PlayerContextProvider>
-      <header className="absolute inset-x-0 top-0 z-50 bg-gray-900/90 backdrop-blur">
+      <header
+        className="fixed inset-x-0 top-0 z-50 bg-gray-900/90 backdrop-blur"
+        style={{ padding: '10px' }}
+      >
         <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
-              <img
-                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                alt=""
-                className="h-8 w-auto"
-              />
+              <span className="sr-only">timbre</span>
+              <Logo className="text-gray-900 dark:text-white" />
             </a>
           </div>
           <div className="lg:flex lg:gap-x-12 lg:flex-auto">
@@ -56,16 +56,16 @@ export default function App() {
           </div>
         </nav>
       </header>
-      <VolumeSlider />
 
-      <Toggler />
-      <MusicBoard />
-
-      <UserMenu data={data} />
-
-      <a href="#" id="logout-link">
-        Logout
-      </a>
+      <main className="pt-24">
+        <VolumeSlider />
+        <Toggler />
+        <MusicBoard />
+        <UserMenu data={data} />
+        <a href="#" id="logout-link">
+          Logout
+        </a>
+      </main>
     </PlayerContextProvider>
   );
 }

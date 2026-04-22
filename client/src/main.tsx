@@ -16,14 +16,14 @@ createRoot(document.getElementById('root')!).render(
 );
 
 export interface UserProfile {
-  data?: {
-    display_name?: string;
-    id?: string;
-    email?: string;
-    uri?: string;
-    href?: string;
-    images?: { url: string }[];
-    external_urls?: { spotify: string };
+  data: {
+    display_name: string;
+    id: string;
+    email: string;
+    uri: string;
+    href: string;
+    images: { url: string }[];
+    external_urls: { spotify: string };
   };
 }
 
@@ -195,27 +195,33 @@ function raise(err: string): never {
   throw err;
 }
 
-function populateUI(profile: UserProfile) {
+function populateUI(props: UserProfile) {
   const displayNameEl = document.getElementById('displayName') ?? raise('Não tem el #displayName');
   const avatarEl = document.getElementById('avatar') ?? raise('Não tem el #avatar');
 
-  displayNameEl.innerText = profile.display_name;
-  if (profile.images[0]) {
+  if (!props.data || !displayNameEl) {
+    displayNameEl.innerText = 'Carregando...';
+    avatarEl.innerHTML = '<p>Carregando imagem...</p>';
+    return;
+  }
+
+  displayNameEl.innerText = props.data.display_name ?? 'Unknown';
+  if (props.data.images?.[0]) {
     const profileImage = new Image(200, 200);
-    profileImage.src = profile.images[0].url;
+    profileImage.src = props.data.images[0].url;
     avatarEl.appendChild(profileImage);
   }
-  profilePopulate(profile);
+  profilePopulate(props);
 }
 
-function profilePopulate(profile: UserProfile) {
-  document.getElementById('id')!.innerText = profile.id;
-  document.getElementById('email')!.innerText = profile.email;
-  document.getElementById('uri')!.innerText = profile.uri;
-  document.getElementById('uri')!.setAttribute('href', profile.external_urls.spotify);
-  document.getElementById('url')!.innerText = profile.href;
-  document.getElementById('url')!.setAttribute('href', profile.href);
-  document.getElementById('imgUrl')!.innerText = profile.images[0]?.url ?? '(no profile image)';
+function profilePopulate(props: UserProfile) {
+  document.getElementById('id')!.innerText = props.data.id;
+  document.getElementById('email')!.innerText = props.data.email;
+  document.getElementById('uri')!.innerText = props.data.uri;
+  document.getElementById('uri')!.setAttribute('href', props.data.external_urls.spotify);
+  document.getElementById('url')!.innerText = props.data.href;
+  document.getElementById('url')!.setAttribute('href', props.data.href);
+  document.getElementById('imgUrl')!.innerText = props.data.images[0]?.url ?? '(no profile image)';
 }
 
 export function logout() {

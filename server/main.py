@@ -1,15 +1,40 @@
-from typing import Any, Dict
-from flask import Flask, request, jsonify
-import requests
 import os
-from flask_cors import CORS
+from dataclasses import dataclass
+from typing import Any, Dict
+
+import requests
 from dotenv import load_dotenv
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173", "http://127.0.0.1:8080"])
 DEV_MODE = True
+
+# export interface UserProfile {
+#   data: {
+#     display_name: string;
+#     id: string;
+#     email: string;
+#     uri: string;
+#     href: string;
+#     images: { url: string }[];
+#     external_urls: { spotify: string };
+#   };
+# }
+
+
+@dataclass
+class UserProfile:
+    display_name: str
+    id: str
+    email: str
+    uri: str
+    href: str
+    images: list[dict[str, str]]
+    external_urls: dict[str, str]
 
 
 @app.route("/api/get_client_id", methods=["GET"])
@@ -53,15 +78,21 @@ def get_user_data() -> Dict[str, Any]:
     Endpoint to get user data.
     Returns a dictionary with user information.
     """
-    user_data: Dict[str, Any] = {
-        "user_id": 1,
-        "display_name": "Fabio Sampaio",
-        "user_email": "teste@teste.com",
-        "user_uri": "teste_uri@teste.com",
-        "user_spotify_link": "www.link.com.br",
-        "user_profile_image": "https://img.myloview.com.br/fotomurais/user-icon-human-person-symbol-avatar-login-sign-700-259624278.jpg",
-    }
-    return user_data
+    user_data: UserProfile = UserProfile(
+        display_name="Fabio Sampaio",
+        id="1",
+        email="teste2@teste.com",
+        uri="teste_uri@teste.com",
+        href="www.link.com.br",
+        images=[
+            {
+                "url": "https://img.myloview.com.br/fotomurais/user-icon-human-person-symbol-avatar-login-sign-700-259624278.jpg"
+            }
+        ],
+        external_urls={"spotify": "www.link.com.br"},
+    )
+
+    return user_data.__dict__
 
 
 @app.route("/api/user/insert", methods=["SET"])
